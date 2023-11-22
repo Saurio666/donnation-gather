@@ -1,0 +1,107 @@
+<div id="wrapper" class="divided">
+    <section class="wrapper style1 align-center">
+        <div class="inner">
+            <div class="index align-left">
+                <section>
+                    <header>
+                        <h3>Formulario</h3>
+                    </header>
+                    <div class="content">
+                        <form id="registerForm">
+                            <div class="fields">
+                                <div class="field half">
+                                    <label for="donnationNumber"># Donaci&oacute;n</label>
+                                    <input type="text" name="name" id="donnationNumber" value="1234" readonly />
+                                </div>
+                                <div class="field half">
+                                    <label for="date">Fecha</label>
+                                    <input type="text" name="date" id="date" value="11/21/2023" readonly />
+                                </div>
+
+                                <div class="field half">
+                                    <label for="id">Identificaci&oacute;n</label>
+                                    <input type="text" name="id" id="id" value="" />
+                                </div>
+                                <div class="field half">
+                                    <label for="name">Nombre</label>
+                                    <input type="text" name="name" id="name" value="" />
+                                </div>
+                                <div class="field">
+                                    <label for="event">Evento</label>
+                                    <select name="event" id="event">
+                                        <option value="">- Seleccione -</option>
+                                        <option value="1">Evento uno</option>
+                                        <option value="2">Evento dos</option>
+                                        <option value="3">Evento tres</option>
+                                        <option value="4">Evento cuatro</option>
+                                    </select>
+                                </div>
+                                <div class="field">
+                                    <label for="event">Evento</label>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Cantidad</th>
+                                                <th>Descripci&oacute;n</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>4</td>
+                                                <td>Sacos de arroz</td>
+                                                <td style="text-align: right;">
+                                                    <i class="fas fa-edit" aria-hidden="true"
+                                                        style="color: blue; font-size: 30px;"></i>
+                                                    <i class="fa fa-times-circle" aria-hidden="true"
+                                                        style="color: red; font-size: 30px;"></i>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>2</td>
+                                                <td>Litros de aceite</td>
+                                                <td style="text-align: right;">
+                                                    <i class="fas fa-edit" aria-hidden="true"
+                                                        style="color: blue; font-size: 30px;"></i>
+                                                    <i class="fa fa-times-circle" aria-hidden="true"
+                                                        style="color: red; font-size: 30px;"></i>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td style="text-align: right;">
+                                                    <i class="fa fa-plus-circle" aria-hidden="true"
+                                                        style="color: blue; font-size: 30px;"></i>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <div class="field half">
+                                    <label for="responsable">Responsable</label>
+                                    <input type="text" name="responsable" id="responsable" value="Juanito Paez" />
+                                </div>
+                                <div class="field half">
+                                    <label for="delivery_point">Punto de Entrega</label>
+                                    <select name="delivery_point" id="delivery_point">
+                                        <option value="">- Seleccione -</option>
+                                        <option value="1">Punto uno</option>
+                                        <option value="2">Punto dos</option>
+                                        <option value="3">Punto tres</option>
+                                        <option value="4">Punto cuatro</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div style="text-align: center;">
+                                <button id="btnSendAnswers" class="button primary fit">Registrar Donaci&oacute;n</button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </section>
+</div>
