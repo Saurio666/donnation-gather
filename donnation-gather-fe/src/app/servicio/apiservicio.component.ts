@@ -37,6 +37,15 @@ export class ApiServicioComponent {
         );
     }
 
+    public registrarDonacion(data: any): Observable<any> {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json'
+        });
+        return this.httpClient.post(`${this.getApiUrl()}/donacion_personal/registrar`, data, { headers }).pipe(
+            catchError(this.handleError('registrarDonacion', { message: `No se puede registrar la donacion ${data}` }))
+        );
+    }
+
     private handleError(operation = 'operation', result: any) {
         return (error: any): Observable<any> => {
             if (error instanceof HttpErrorResponse) {

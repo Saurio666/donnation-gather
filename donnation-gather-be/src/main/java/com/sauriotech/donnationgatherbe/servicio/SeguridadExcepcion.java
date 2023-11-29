@@ -6,5 +6,7 @@ package com.sauriotech.donnationgatherbe.servicio;
  *
  */
 public class SeguridadExcepcion extends Exception {
-
+	public SeguridadExcepcion (String mensaje) {
+		super(mensaje);
+	}
 }

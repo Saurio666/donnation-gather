@@ -26,10 +26,14 @@ export class DonnationComponent implements OnInit {
   token: any;
   imprimirLog: boolean = true;
 
-  parametrosUsuario: { [key: string]: string } = {};
+  parametrosUsuario: { [key: string]: any } = {};
   validaciones: { [key: string]: string } = {};
 
-  itemsDonacion: {cantidad: number; descripcion: string; tmpId: number}[] =[];
+  itemsDonacion: { cantidad: number; descripcion: string; tmpId: number }[] = [];
+
+  errorGeneral: any;
+
+  item_nuevo: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -47,6 +51,8 @@ export class DonnationComponent implements OnInit {
     this.log('token: ' + this.token);
     this.apiServicio.obtenerEventos(this.token).subscribe(r => {
       this.respuestaEventos = r;
+      this.log('[obtenerEventos] r ' + r)
+      this.errorGeneral = r?.datos?.err_autorizacion;
     });
 
     this.apiServicio.obtenerPuntosEntrega(this.token).subscribe(r => {
@@ -54,9 +60,10 @@ export class DonnationComponent implements OnInit {
     });
 
     //tmp
-    this.itemsDonacion.push({cantidad: 5, descripcion: 'Libras arroz', tmpId: 1});
-    this.itemsDonacion.push({cantidad: 2, descripcion: 'Libras azucar', tmpId: 2});
-    this.itemsDonacion.push({cantidad: 3, descripcion: 'Docenas huevos', tmpId: 3});
+    this.itemsDonacion.push({ cantidad: 5, descripcion: 'Libras arroz', tmpId: 1 });
+    this.itemsDonacion.push({ cantidad: 2, descripcion: 'Libras azucar', tmpId: 2 });
+    this.itemsDonacion.push({ cantidad: 3, descripcion: 'Docenas huevos', tmpId: 3 });
+    this.itemsDonacion.push({ cantidad: 1, descripcion: 'Funda de caramelos', tmpId: 4 });
   }
 
   public onPuntoEntregaSelected(event: any) {
@@ -83,32 +90,38 @@ export class DonnationComponent implements OnInit {
     }
   }
 
-  private validarDatos() : boolean {
+  private validarDatos(): boolean {
     this.validaciones = {};
-    if(!this.parametrosUsuario['identificacion']) {
+    if (!this.parametrosUsuario['identificacion']) {
       this.validaciones['identificacion'] = 'N';
     }
-    if(!this.parametrosUsuario['nombre']) {
+    if (!this.parametrosUsuario['nombre']) {
       this.validaciones['nombre'] = 'N';
     }
-    if(!this.parametrosUsuario['evento']) {
+    if (!this.parametrosUsuario['evento']) {
       this.validaciones['evento'] = 'N';
     }
-    if(!this.parametrosUsuario['punto_entrega']) {
+    if (!this.parametrosUsuario['punto_entrega']) {
       this.validaciones['punto_entrega'] = 'N';
     }
-    if(!this.parametrosUsuario['boleto']) {
+    if (!this.parametrosUsuario['boleto']) {
       this.validaciones['boleto'] = 'N';
     }
 
-    return Object.keys(this.validaciones).length <= 0 ;
+    return Object.keys(this.validaciones).length <= 0;
   }
 
   public registrarDonacion() {
-    this.log( this.parametrosUsuario);
+    this.log(this.parametrosUsuario);
 
-    if(this.validarDatos()) {
+    if (this.validarDatos()) {
       this.log('Se graba');
+      this.parametrosUsuario['items'] = this.itemsDonacion;
+
+      this.apiServicio.registrarDonacion(this.parametrosUsuario).subscribe(r => {
+        this.respuestaServicio = r;
+        this.log(r);
+      });
     } else {
       this.log('NO se graba');
       this.validaciones['general'] = 'N';
@@ -117,9 +130,21 @@ export class DonnationComponent implements OnInit {
 
   public eliminarElemento(id: any) {
     this.log('id ' + id);
+
+    const indexOfObject = this.itemsDonacion.findIndex((item) => {
+      return item.tmpId === parseInt(id);
+    });
+
+    this.log('indexOfObject ' + indexOfObject);
+
+    if (indexOfObject > -1) {
+      this.itemsDonacion.splice(indexOfObject, 1)
+    }
   }
 
-
+  public agregarElemento() {
+    this.item_nuevo = true;
+  }
 
   private log(datos: any) {
     if (this.imprimirLog) {

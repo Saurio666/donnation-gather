@@ -40,8 +40,8 @@ insert into donacion.evento(codigo_evento, nombre_evento, direccion_evento, fech
 create sequence donacion.seq_donacion_personal increment 1 start 1;
 create table if not exists donacion.donacion_personal(
 	codigo_donacion_personal numeric(10) not null primary key default nextval('donacion.seq_donacion_personal'),
-	nombre_donador varchar(500) not null primary key,
-	cedula_donador varchar(30) not null primary key,
+	nombre_donador varchar(500) not null,
+	cedula_donador varchar(30) not null,
 	codigo_evento numeric(6) not null,
 	codigo_punto_entrega numeric(6) not null,
 	fecha_entrega timestamp not null default current_timestamp(6),

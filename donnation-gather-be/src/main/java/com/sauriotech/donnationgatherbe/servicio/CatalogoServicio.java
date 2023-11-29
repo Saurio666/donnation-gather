@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,7 +31,7 @@ public class CatalogoServicio extends ServicioBase {
 	private EventoBean eventoBean;
 
 	@GetMapping("/puntos_entrega/{token}")
-	public ResponseEntity<RespuestaServicio> getCatalogoPuntosEntrega(String token) {
+	public ResponseEntity<RespuestaServicio> getCatalogoPuntosEntrega(@PathVariable("token") String token) {
 		try {
 			validarToken(token);
 			List<PuntoEntregaModelo> puntosEntrega = puntoEntregaBean.getPuntosEntregaActivos();
@@ -47,7 +48,7 @@ public class CatalogoServicio extends ServicioBase {
 	}
 	
 	@GetMapping("/evento/{token}")
-	public ResponseEntity<RespuestaServicio> getCatalogoEventos(String token) {
+	public ResponseEntity<RespuestaServicio> getCatalogoEventos(@PathVariable("token")String token) {
 		try {
 			validarToken(token);
 			List<EventoModelo> eventos = eventoBean.getEventosActivos();

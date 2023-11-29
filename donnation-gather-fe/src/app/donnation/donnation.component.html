@@ -1,15 +1,19 @@
 <div id="wrapper" class="divided">
     <section class="wrapper style1 align-center">
         <div class="inner">
-            <div class="index align-left">
-                <section>
-                    <header>
-                        <h3>Formulario</h3>
-                    </header>
-                    <div class="content">
-                        <form id="registerForm">
-                            <div class="fields">
-                                <!--<div class="field half">
+            <div *ngIf="errorGeneral">
+                <label>{{errorGeneral}}</label>
+            </div>
+            <div *ngIf="!errorGeneral">
+                <div class="index align-left">
+                    <section>
+                        <header>
+                            <h3>Formulario</h3>
+                        </header>
+                        <div class="content">
+                            <form id="registerForm">
+                                <div class="fields">
+                                    <!--<div class="field half">
                                     <label for="donnationNumber"># Donaci&oacute;n</label>
                                     <input type="text" name="name" id="donnationNumber" value="1234" readonly />
                                 </div>
@@ -18,88 +22,116 @@
                                     <input type="text" name="date" id="date" value="11/21/2023" readonly />
                                 </div>-->
 
-                                <div class="field half">
-                                    <label for="id">Identificaci&oacute;n</label>
-                                    <input type="text" name="id" id="id" [(ngModel)]="parametrosUsuario['identificacion']" />
-                                    <label for="id" *ngIf="validaciones['identificacion']" style="color: red; text-align: right;">Ingrese una identificaci&oacute;n</label>
+                                    <div class="field half">
+                                        <label for="id">Identificaci&oacute;n</label>
+                                        <input type="text" name="id" id="id"
+                                            [(ngModel)]="parametrosUsuario['identificacion']" />
+                                        <label for="id" *ngIf="validaciones['identificacion']"
+                                            style="color: red; text-align: right;">Ingrese una
+                                            identificaci&oacute;n</label>
+                                    </div>
+                                    <div class="field half">
+                                        <label for="nombre">Nombre</label>
+                                        <input type="text" name="nombre" id="nombre"
+                                            [(ngModel)]="parametrosUsuario['nombre']" />
+                                        <label for="nombre" *ngIf="validaciones['nombre']"
+                                            style="color: red; text-align: right;">Ingrese un nombre</label>
+                                    </div>
+                                    <div class="field">
+                                        <label for="evento">Evento</label>
+                                        <select name="evento" id="evento" (change)="onEventoSelected($event)">
+                                            <option value="">- Seleccione -</option>
+                                            <option *ngFor="let evento of respuestaEventos?.datos?.eventos"
+                                                value="{{evento.codigoEvento}}">
+                                                <div [innerHTML]="evento.nombreEvento"></div>
+                                            </option>
+                                        </select>
+                                        <label for="evento" *ngIf="validaciones['evento']"
+                                            style="color: red; text-align: right;">Seleccione un evento</label>
+                                    </div>
+                                    <div class="field half">
+                                        <label for="puntosEntrega">Punto de Entrega</label>
+                                        <select name="puntosEntrega" id="puntosEntrega"
+                                            (change)="onPuntoEntregaSelected($event)">
+                                            <option value="">- Seleccione -</option>
+                                            <option *ngFor="let punto of respuestaPuntosEntrega?.datos?.puntosEntrega"
+                                                value="{{punto.codigoPuntoEntrega}}">
+                                                <div [innerHTML]="punto.nombrePuntoEntrega"></div>
+                                            </option>
+                                        </select>
+                                        <label for="puntosEntrega" *ngIf="validaciones['punto_entrega']"
+                                            style="color: red; text-align: right;">Seleccione un punto de
+                                            entrega</label>
+                                    </div>
+                                    <div class="field half">
+                                        <label for="responsable">Responsable</label>
+                                        <input type="text" name="responsable" id="responsable"
+                                            value="{{responsablePuntoEntrega}}" readonly />
+                                    </div>
+                                    <div class="field">
+                                        <label for="boleto">N&uacute;mero de Boleto</label>
+                                        <input type="text" name="boleto" id="boleto"
+                                            [(ngModel)]="parametrosUsuario['boleto']" />
+                                        <label for="boleto" *ngIf="validaciones['boleto']"
+                                            style="color: red; text-align: right;">Ingrese un n&uacute;mero de
+                                            boleto</label>
+                                    </div>
+                                    <div class="field">
+                                        <label for="event">Items</label>
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>Cantidad</th>
+                                                    <th>Descripci&oacute;n</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let item of itemsDonacion">
+                                                    <td>{{item.cantidad}}</td>
+                                                    <td>{{item.descripcion}}</td>
+                                                    <td style="text-align: right;">
+
+                                                        <i class="fas fa-edit" aria-hidden="true"
+                                                            style="color: blue; font-size: 30px;"></i>
+
+                                                        <i class="fa fa-times-circle" aria-hidden="true"
+                                                            style="color: red; font-size: 30px;"
+                                                            (click)="eliminarElemento(item.tmpId)"></i>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr *ngIf="item_nuevo">
+                                                    <td colspan="3">
+                                                        <label for="descripcion_nuevo">Cantidad</label>
+                                                        <input type="text" name="descripcion_nuevo"
+                                                            id="descripcion_nuevo" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td style="text-align: right;">
+                                                        <i class="fa fa-plus-circle" aria-hidden="true"
+                                                            style="color: blue; font-size: 30px;"
+                                                            (click)="agregarElemento()"></i>
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
                                 </div>
-                                <div class="field half">
-                                    <label for="nombre">Nombre</label>
-                                    <input type="text" name="nombre" id="nombre" [(ngModel)]="parametrosUsuario['nombre']" />
-                                    <label for="nombre" *ngIf="validaciones['nombre']" style="color: red; text-align: right;">Ingrese un nombre</label>
+                                <div style="text-align: center;">
+                                    <label for="boleto" *ngIf="validaciones['general']" style="color: red;">El
+                                        formulario tiene uno o m&aacute;s campos en blanco</label>
+                                    <button id="btnSendAnswers" class="button primary fit"
+                                        (click)="registrarDonacion()">Registrar Donaci&oacute;n</button>
                                 </div>
-                                <div class="field">
-                                    <label for="evento">Evento</label>
-                                    <select name="evento" id="evento" (change)="onEventoSelected($event)">
-                                        <option value="">- Seleccione -</option>
-                                        <option *ngFor="let evento of respuestaEventos?.datos?.eventos" value="{{evento.codigoEvento}}">
-                                            <div [innerHTML]="evento.nombreEvento"></div></option>
-                                    </select>
-                                    <label for="evento" *ngIf="validaciones['evento']" style="color: red; text-align: right;">Seleccione un evento</label>
-                                </div>
-                                <div class="field">
-                                    <label for="event">Items</label>
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>Cantidad</th>
-                                                <th>Descripci&oacute;n</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr *ngFor="let item of itemsDonacion">
-                                                <td>{{item.cantidad}}</td>
-                                                <td>{{item.descripcion}}</td>
-                                                <td style="text-align: right;">
-                                                    
-                                                    <i class="fas fa-edit" aria-hidden="true"
-                                                        style="color: blue; font-size: 30px;"></i>
-                                                       
-                                                    <i class="fa fa-times-circle" aria-hidden="true"
-                                                        style="color: red; font-size: 30px;"
-                                                        (click)="eliminarElemento(item.tmpId)"></i>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <td></td>
-                                                <td></td>
-                                                <td style="text-align: right;">
-                                                    <i class="fa fa-plus-circle" aria-hidden="true"
-                                                        style="color: blue; font-size: 30px;"></i>
-                                                </td>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
-                                </div>
-                                 <div class="field half">
-                                    <label for="puntosEntrega">Punto de Entrega</label>
-                                    <select name="puntosEntrega" id="puntosEntrega" (change)="onPuntoEntregaSelected($event)">
-                                        <option value="">- Seleccione -</option>
-                                        <option *ngFor="let punto of respuestaPuntosEntrega?.datos?.puntosEntrega" value="{{punto.codigoPuntoEntrega}}">
-                                            <div [innerHTML]="punto.nombrePuntoEntrega"></div></option>
-                                    </select>
-                                    <label for="puntosEntrega" *ngIf="validaciones['punto_entrega']" style="color: red; text-align: right;">Seleccione un punto de entrega</label>
-                                </div>
-                                <div class="field half">
-                                    <label for="responsable">Responsable</label>
-                                    <input type="text" name="responsable" id="responsable" value="{{responsablePuntoEntrega}}" readonly />
-                                </div>
-                                <div class="field">
-                                    <label for="boleto">N&uacute;mero de Boleto</label>
-                                    <input type="text" name="boleto" id="boleto" [(ngModel)]="parametrosUsuario['boleto']" />
-                                    <label for="boleto" *ngIf="validaciones['boleto']" style="color: red; text-align: right;">Ingrese un n&uacute;mero de boleto</label>
-                                </div>                             
-                            </div>
-                            <div style="text-align: center;">
-                                <label for="boleto" *ngIf="validaciones['general']" style="color: red;">El formulario tiene uno o m&aacute;s campos en blanco</label>
-                                <button id="btnSendAnswers" class="button primary fit" (click)="registrarDonacion()">Registrar Donaci&oacute;n</button>
-                            </div>
-                        </form>
-                    </div>
-                </section>
+                            </form>
+                        </div>
+                    </section>
+                </div>
             </div>
         </div>
     </section>
