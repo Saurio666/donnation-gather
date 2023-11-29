@@ -33,7 +33,10 @@ export class DonnationComponent implements OnInit {
 
   errorGeneral: any;
 
-  item_nuevo: boolean = false;
+  item_accion: string = '';
+  itemSeleccionado: any;
+
+  tmpIdCounter: number = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -60,10 +63,10 @@ export class DonnationComponent implements OnInit {
     });
 
     //tmp
-    this.itemsDonacion.push({ cantidad: 5, descripcion: 'Libras arroz', tmpId: 1 });
-    this.itemsDonacion.push({ cantidad: 2, descripcion: 'Libras azucar', tmpId: 2 });
-    this.itemsDonacion.push({ cantidad: 3, descripcion: 'Docenas huevos', tmpId: 3 });
-    this.itemsDonacion.push({ cantidad: 1, descripcion: 'Funda de caramelos', tmpId: 4 });
+    /*this.itemsDonacion.push({ cantidad: 5, descripcion: 'Libras arroz', tmpId: this.tmpIdCounter++ });
+    this.itemsDonacion.push({ cantidad: 2, descripcion: 'Libras azucar', tmpId: this.tmpIdCounter++ });
+    this.itemsDonacion.push({ cantidad: 3, descripcion: 'Docenas huevos', tmpId: this.tmpIdCounter++ });
+    this.itemsDonacion.push({ cantidad: 1, descripcion: 'Funda de caramelos', tmpId: this.tmpIdCounter++ });*/
   }
 
   public onPuntoEntregaSelected(event: any) {
@@ -107,16 +110,21 @@ export class DonnationComponent implements OnInit {
     if (!this.parametrosUsuario['boleto']) {
       this.validaciones['boleto'] = 'N';
     }
+    if(this.itemsDonacion.length <= 0) {
+      this.validaciones['items'] = 'N';
+    }
 
     return Object.keys(this.validaciones).length <= 0;
   }
 
   public registrarDonacion() {
+    this.item_accion = 'N';
     this.log(this.parametrosUsuario);
 
     if (this.validarDatos()) {
       this.log('Se graba');
       this.parametrosUsuario['items'] = this.itemsDonacion;
+      this.parametrosUsuario['token'] = this.token;
 
       this.apiServicio.registrarDonacion(this.parametrosUsuario).subscribe(r => {
         this.respuestaServicio = r;
@@ -129,6 +137,7 @@ export class DonnationComponent implements OnInit {
   }
 
   public eliminarElemento(id: any) {
+    this.item_accion = 'E';
     this.log('id ' + id);
 
     const indexOfObject = this.itemsDonacion.findIndex((item) => {
@@ -142,8 +151,33 @@ export class DonnationComponent implements OnInit {
     }
   }
 
+  public modificarElemento(id: any) {
+    this.log('id ' + id);
+
+    const indexOfObject = this.itemsDonacion.findIndex((item) => {
+      return item.tmpId === parseInt(id);
+    });
+
+    this.log('indexOfObject ' + indexOfObject);
+
+    if (indexOfObject > -1) {
+      this.item_accion = 'M';
+      this.itemSeleccionado = this.itemsDonacion[indexOfObject];
+    }
+  }
+
   public agregarElemento() {
-    this.item_nuevo = true;
+    this.item_accion = 'M';
+    this.itemSeleccionado = { cantidad: 0, descripcion: '', tmpId: this.tmpIdCounter++ };
+    this.itemsDonacion.push(this.itemSeleccionado);
+  }
+
+  public completarEdicionItem() {
+    this.item_accion = 'N';
+  }
+  
+  public recargarPagina() {
+    window.location.reload();
   }
 
   private log(datos: any) {

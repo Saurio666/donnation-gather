@@ -4,24 +4,24 @@
             <div *ngIf="errorGeneral">
                 <label>{{errorGeneral}}</label>
             </div>
-            <div *ngIf="!errorGeneral">
+            <div *ngIf="respuestaServicio">
+                <label>Se ha registrado la donaci&oacute;n {{respuestaServicio?.datos?.codigo_donacion}}</label>
+                <br />
+                <button id="btnOk" class="button primary fit"
+                                        (click)="recargarPagina()">ACEPTAR</button>
+            </div>
+
+            <div *ngIf="!errorGeneral && !respuestaServicio">
+                
                 <div class="index align-left">
                     <section>
-                        <header>
-                            <h3>Formulario</h3>
-                        </header>
+                        
                         <div class="content">
-                            <form id="registerForm">
+                            <header>
+                                <h3>Formulario</h3>
+                            </header>
+                            <form id="registerForm" action="">
                                 <div class="fields">
-                                    <!--<div class="field half">
-                                    <label for="donnationNumber"># Donaci&oacute;n</label>
-                                    <input type="text" name="name" id="donnationNumber" value="1234" readonly />
-                                </div>
-                                <div class="field half">
-                                    <label for="date">Fecha</label>
-                                    <input type="text" name="date" id="date" value="11/21/2023" readonly />
-                                </div>-->
-
                                     <div class="field half">
                                         <label for="id">Identificaci&oacute;n</label>
                                         <input type="text" name="id" id="id"
@@ -78,6 +78,8 @@
                                     </div>
                                     <div class="field">
                                         <label for="event">Items</label>
+                                        <label for="boleto" *ngIf="validaciones['items']"
+                                            style="color: red; text-align: right;">Ingrese al menos un item</label>
                                         <table>
                                             <thead>
                                                 <tr>
@@ -93,7 +95,8 @@
                                                     <td style="text-align: right;">
 
                                                         <i class="fas fa-edit" aria-hidden="true"
-                                                            style="color: blue; font-size: 30px;"></i>
+                                                            style="color: blue; font-size: 30px;"
+                                                            (click)="modificarElemento(item.tmpId)"></i>
 
                                                         <i class="fa fa-times-circle" aria-hidden="true"
                                                             style="color: red; font-size: 30px;"
@@ -102,13 +105,6 @@
                                                 </tr>
                                             </tbody>
                                             <tfoot>
-                                                <tr *ngIf="item_nuevo">
-                                                    <td colspan="3">
-                                                        <label for="descripcion_nuevo">Cantidad</label>
-                                                        <input type="text" name="descripcion_nuevo"
-                                                            id="descripcion_nuevo" />
-                                                    </td>
-                                                </tr>
                                                 <tr>
                                                     <td></td>
                                                     <td></td>
@@ -121,14 +117,29 @@
                                             </tfoot>
                                         </table>
                                     </div>
-                                </div>
-                                <div style="text-align: center;">
-                                    <label for="boleto" *ngIf="validaciones['general']" style="color: red;">El
-                                        formulario tiene uno o m&aacute;s campos en blanco</label>
-                                    <button id="btnSendAnswers" class="button primary fit"
-                                        (click)="registrarDonacion()">Registrar Donaci&oacute;n</button>
+                                    <div class="field half" *ngIf="item_accion === 'M'">
+                                        <label for="cantidad_nuevo">Cantidad</label>
+                                        <input type="number" name="cantidad_nuevo" id="cantidad_nuevo"
+                                            [(ngModel)]="itemSeleccionado.cantidad"
+                                            value="itemSeleccionado?.cantidad"
+                                            numbersOnly/>
+                                    </div>
+                                    <div class="field half" *ngIf="item_accion === 'M'">
+                                        <label for="descripcion_nuevo">Descripcion</label>
+                                        <input type="text" name="descripcion_nuevo" id="descripcion_nuevo"
+                                            [(ngModel)]="itemSeleccionado.descripcion"
+                                            value="itemSeleccionado?.descripcion"
+                                            (keyup.enter)="completarEdicionItem()" />
+                                    </div>
                                 </div>
                             </form>
+                            
+                            <div style="text-align: center;">
+                                <label for="boleto" *ngIf="validaciones['general']" style="color: red;">El
+                                    formulario tiene uno o m&aacute;s campos en blanco</label>
+                                <button id="btnRegistrarDonacion" class="button primary fit"
+                                    (click)="registrarDonacion()">Registrar Donaci&oacute;n</button>
+                            </div>
                         </div>
                     </section>
                 </div>
